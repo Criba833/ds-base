@@ -19,8 +19,3 @@ docs/token-reference/ds-base.css
 # Temp files
 *.tmp
 *.log
-
-# Agent tooling (Impeccable critique snapshots, work files)
-.impeccable/
-.codex/
-.cursor/
