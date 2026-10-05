@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.sass-cache/
+docs/token-reference/ds-base.css
+
+# OS files
+.DS_Store
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Temp files
+*.tmp
+*.log
+
+# Agent tooling (Impeccable critique snapshots, work files)
+.impeccable/
+.codex/
+.cursor/

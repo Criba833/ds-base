@@ -1,0 +1,75 @@
+// Fonts module
+//
+// $font-family-primary is declared in _typography.scss (tokens module),
+// NOT here. This module reads the configured value from tokens to avoid
+// duplicating the !default declaration. The Sass module system ensures
+// both modules share the same configured value.
+//
+// Local provider:  single variable font file (100–900 in one woff2).
+// Remote provider: one @font-face per weight using individual document URLs.
+//                  File slug pattern: {font-lowercase}-{weight-name}
+//                  e.g. montserrat-thin, montserrat-bold, etc.
+
+@use "../tokens" as tokens;
+
+$font-provider: 'local' !default;
+$font-base-url: '' !default;
+$font-display: swap !default;
+
+// Weight slug map used by remote providers (cdn, etc.)
+// Maps CSS font-weight value → URL slug suffix.
+$_weight-slugs: (
+  100: 'thin',
+  200: 'extralight',
+  300: 'light',
+  400: 'regular',
+  500: 'medium',
+  600: 'semibold',
+  700: 'bold',
+  800: 'extrabold',
+  900: 'black',
+);
+
+@function _local-url($file) {
+  @return url('../../assets/fonts/#{tokens.$font-family-primary}/#{$file}');
+}
+
+@function _remote-url($slug) {
+  @return url('#{$font-base-url}/#{$slug}');
+}
+
+@if tokens.$font-family-primary != system-ui {
+  @if $font-provider == 'local' {
+    // Variable font: one file covers all weights 100–900.
+    @font-face {
+      font-family: tokens.$font-family-primary;
+      src: _local-url('variable.woff2') format('woff2'),
+           _local-url('variable.woff') format('woff');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: $font-display;
+    }
+
+    @font-face {
+      font-family: tokens.$font-family-primary;
+      src: _local-url('italic.woff2') format('woff2');
+      font-weight: 100 900;
+      font-style: italic;
+      font-display: $font-display;
+    }
+  } @else {
+    // Remote provider: individual @font-face per weight.
+    // Slug base: font family in lowercase (e.g. "Montserrat" → "montserrat").
+    $slug-base: to-lower-case(tokens.$font-family-primary);
+
+    @each $weight, $name in $_weight-slugs {
+      @font-face {
+        font-family: tokens.$font-family-primary;
+        src: _remote-url('#{$slug-base}-#{$name}') format('woff2');
+        font-weight: $weight;
+        font-style: normal;
+        font-display: $font-display;
+      }
+    }
+  }
+}

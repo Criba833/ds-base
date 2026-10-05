@@ -1,0 +1,7 @@
+// Base styles: reset + CSS Custom Properties.
+//
+// The reset establishes a controlled baseline for consumers
+// (box-sizing, margins, form elements). _root.scss then emits
+// the token-derived CSS Custom Properties on :root.
+@forward "reset";
+@forward "root";

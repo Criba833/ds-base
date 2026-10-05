@@ -1,0 +1,29 @@
+// ds-base — Public API
+//
+// The ONLY entry point for consumers. It contains only
+// @forward statements — no variables, no configuration.
+//
+// Optional brand configuration (ds-base ships with no
+// visual identity of its own):
+//
+//   @use "@spirocode/ds-base" with (
+//     $brand-primary: ("blue", "500"),
+//     $brand-secondary: ("green", "500"),
+//   );
+//
+// Consumers should prefer CSS custom properties at runtime
+// (var(--color-*), var(--spacing-*), var(--font-*),
+// var(--radius-*), var(--shadow-*), var(--motion-*)).
+//
+// The optional Liferay adapter lives OUTSIDE this entry
+// point:
+//
+//   @use "@spirocode/ds-base/adapters/liferay";
+
+@forward "src/tokens";
+@forward "src/functions";
+@forward "src/mixins";
+@forward "src/fonts";
+@forward "src/icons";
+@forward "src/base";
+@forward "src/helpers";

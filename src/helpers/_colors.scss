@@ -1,0 +1,30 @@
+@use "../functions" as fn;
+@use "../tokens" as tokens;
+
+.ds-text-primary {
+  color: fn.color("text", "primary");
+}
+
+.ds-text-secondary {
+  color: fn.color("text", "secondary");
+}
+
+.ds-text-inverse {
+  color: fn.color("text", "inverse");
+}
+
+// Brand-dependent helper. Only emitted when $brand-primary
+// is configured in src/tokens/_brand.scss.
+@if tokens.$brand-primary != null {
+  .ds-bg-primary {
+    background-color: fn.color("primary");
+  }
+}
+
+.ds-bg-success {
+  background-color: fn.color("success");
+}
+
+.ds-bg-error {
+  background-color: fn.color("danger");
+}

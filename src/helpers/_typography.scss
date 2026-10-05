@@ -1,0 +1,17 @@
+@use "../tokens" as tokens;
+
+// Typography scale (font-size).
+// Shares the .ds-text-* namespace with the color helpers in
+// _colors.scss; keys never overlap (caption/body/heading-*
+// vs primary/secondary/inverse), so both can coexist.
+@each $key, $value in tokens.$type-scale {
+  .ds-text-#{$key} {
+    font-size: $value;
+  }
+}
+
+@each $key, $value in tokens.$font-weights {
+  .ds-font-#{$key} {
+    font-weight: $value;
+  }
+}

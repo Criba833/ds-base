@@ -1,0 +1,36 @@
+// Token Reference — build input
+//
+// Generates docs/token-reference/ds-base.css straight from the
+// real ds-base source. This file does NOT redefine tokens: it
+// only configures the brand slots and pulls the core plus the
+// optional Bootstrap Icons adapter.
+//
+//   pnpm build:reference
+//
+// The page then consumes CSS Custom Properties — nothing is
+// copied by hand.
+
+@use "../../index" with (
+  $brand-primary: ("blue", "500"),
+  $brand-secondary: ("green", "500"),
+);
+
+// Icon provider: remote with a relative base URL, so the page
+// uses the adapter's real font assets in place (no copies).
+@use "../../adapters/icons/bootstrap" with (
+  $icon-provider: "remote",
+  $icon-base-url: "../../adapters/icons/bootstrap/assets",
+);
+
+@use "../../src/tokens" as tokens;
+
+// Primitive swatches — exported for THIS page only, generated
+// from the real $color-primitives Sass map at build time.
+// The Sass map stays the single source of truth.
+:root {
+  @each $palette, $shades in tokens.$color-primitives {
+    @each $shade, $value in $shades {
+      --ref-#{$palette}-#{$shade}: #{$value};
+    }
+  }
+}

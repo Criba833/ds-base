@@ -1,0 +1,42 @@
+@use "../tokens" as tokens;
+
+@each $key, $value in tokens.$spacing {
+  // Padding
+  .ds-p-#{$key} {
+    padding: $value;
+  }
+
+  .ds-px-#{$key} {
+    padding-inline: $value;
+  }
+
+  .ds-py-#{$key} {
+    padding-block: $value;
+  }
+
+  // Margin
+  .ds-m-#{$key} {
+    margin: $value;
+  }
+
+  .ds-mx-#{$key} {
+    margin-inline: $value;
+  }
+
+  .ds-my-#{$key} {
+    margin-block: $value;
+  }
+
+  // Gap
+  .ds-gap-#{$key} {
+    gap: $value;
+  }
+
+  .ds-gap-x-#{$key} {
+    column-gap: $value;
+  }
+
+  .ds-gap-y-#{$key} {
+    row-gap: $value;
+  }
+}

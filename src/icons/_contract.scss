@@ -1,0 +1,47 @@
+// Icon contract (provider-agnostic)
+//
+// The ds-base core does NOT depend on any icon library
+// and does NOT assume how a provider renders icons
+// (SVG stroke, SVG fill, icon font, mask, image…).
+//
+// This file defines only the contract and the visual
+// rules needed to consume icons:
+//
+//   DS Core → Icon Contract → Provider / Adapter
+//                               ├── Lucide
+//                               ├── Google Material Symbols
+//                               ├── Bootstrap Icons (adapter)
+//                               └── custom / future
+//
+// The consumer picks a provider without touching tokens
+// or the core architecture. No <Icon> abstraction is
+// defined at this stage.
+//
+// Contract:
+//
+//   1. Size  — the icon box is 1em × 1em, so it scales
+//              with the inherited font-size.
+//   2. Color — icons inherit the surrounding text color
+//              (currentColor). The core does not set
+//              stroke/fill: that is provider territory.
+//   3. Layout — inline-block, never shrinks inside flex
+//              rows.
+//   4. Alignment — vertically centered with adjacent
+//              text.
+//
+// Usage (any provider markup inside the box):
+//
+//   <i class="bi bi-arrow-right ds-icon"></i>       // font
+//   <span class="lucide lucide-arrow-right ds-icon"></span>  // svg
+//   <svg class="ds-icon" …>…</svg>                   // inline
+//
+// Custom sizing: change font-size on the element or an
+// ancestor (the box is em-based), e.g. style="font-size: 2rem".
+
+.ds-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+  flex-shrink: 0;
+}

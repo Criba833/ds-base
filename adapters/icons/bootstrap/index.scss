@@ -1,0 +1,18 @@
+// Bootstrap Icons provider (optional adapter)
+//
+// NOT part of the ds-base core. Import it explicitly:
+//
+//   @use "@spirocode/ds-base/adapters/icons/bootstrap";
+//
+// Provides the @font-face declaration plus the .bi /
+// .bi-* rules for the Bootstrap Icons font set, on top
+// of the core icon contract (src/icons).
+//
+// Font files live in ./assets/ — serve them at /icons/
+// (default local provider) or configure $icon-provider,
+// $icon-base-url and $icon-remote-slug.
+//
+// Other providers are added as their own folders under
+// adapters/icons/ without touching the core.
+
+@forward "font-face";

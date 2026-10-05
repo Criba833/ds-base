@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ds-base — Token Reference</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./ds-base.css">
+<style>
+  /* Page chrome ONLY — layout of the reference tool.
+     No token values are defined here: every sample renders
+     through var(--token) from ds-base.css. */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--color-surface-default);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-base);
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: var(--spacing-6) var(--spacing-4); }
+  code, .v {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+  }
+  code { color: var(--color-text-secondary); }
+  .v { color: var(--color-text-accent); font-weight: var(--font-weight-medium); }
+
+  ::selection { background: var(--color-primary); color: var(--color-text-inverse); }
+  :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+  html { scroll-padding-top: var(--spacing-12); }
+
+  header { background: var(--color-surface-page); }
+  header h1 { margin: 0 0 var(--spacing-1); font-size: var(--font-size-heading-sm); font-weight: var(--font-weight-semibold); }
+  header h1 span { color: var(--color-text-secondary); font-weight: var(--font-weight-regular); }
+  header p { max-width: 75ch; margin: 0 0 var(--spacing-3); color: var(--color-text-secondary); font-size: var(--font-size-caption); }
+  .navbar { position: sticky; top: 0; z-index: 10; background: var(--color-surface-page); border-bottom: 1px solid var(--color-border-subtle); }
+  .navbar .wrap { padding-top: var(--spacing-2); padding-bottom: var(--spacing-2); }
+  nav ul { display: flex; flex-wrap: wrap; gap: var(--spacing-3); list-style: none; margin: 0; padding: 0; }
+  nav a { display: inline-block; padding: var(--spacing-1) 0; color: var(--color-text-accent); text-decoration: none; font-size: var(--font-size-caption); }
+  nav a:hover { text-decoration: underline; }
+
+  section { padding: var(--spacing-6) 0; border-bottom: 1px solid var(--color-border-subtle); }
+  section h2 { margin: 0 0 var(--spacing-1); font-size: var(--font-size-heading-xs); font-weight: var(--font-weight-semibold); }
+  section > p.note { max-width: 75ch; margin: 0 0 var(--spacing-4); color: var(--color-text-secondary); font-size: var(--font-size-caption); }
+
+  /* Specimen row: name | variable | value | visual */
+  .row {
+    display: grid;
+    grid-template-columns: minmax(110px, 1fr) minmax(175px, 1.2fr) minmax(95px, .8fr) minmax(90px, 2fr);
+    gap: var(--spacing-3);
+    align-items: center;
+    padding: var(--spacing-2) 0;
+    border-bottom: 1px dashed var(--color-border-subtle);
+    font-size: var(--font-size-caption);
+  }
+  .row:target, .chip:target { background: var(--color-surface-page); }
+  .row__name { font-weight: var(--font-weight-medium); }
+  .row__demo {
+    display: block;
+    height: 1.6rem;
+    min-width: 48px;
+    border: 1px solid var(--color-border-subtle);
+  }
+  /* Bars span the full row so the scale stays pixel-true; the
+     track only scrolls itself on viewports narrower than the
+     largest token. */
+  .row__bar {
+    grid-column: 1 / -1;
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-default) var(--color-surface-page);
+  }
+  .row__bar::-webkit-scrollbar { height: 8px; }
+  .row__bar::-webkit-scrollbar-track { background: var(--color-surface-page); }
+  .row__bar::-webkit-scrollbar-thumb { background: var(--color-border-default); border-radius: var(--radius-full); }
+  .row__bar i {
+    display: block;
+    height: var(--spacing-4);
+    background: var(--color-primary);
+    box-shadow: inset 0 0 0 1px var(--color-border-subtle);
+  }
+
+  /* Primitive palette chips */
+  .prim { margin-bottom: var(--spacing-4); }
+  .prim__title { margin: var(--spacing-6) 0 var(--spacing-2); font-size: var(--font-size-heading-xs); font-weight: var(--font-weight-semibold); }
+  .prim h4 { margin: 0 0 var(--spacing-2); font-size: var(--font-size-caption); font-weight: var(--font-weight-semibold); color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: .04em; }
+  .prim__row { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--spacing-2); }
+  .chip { border: 1px solid var(--color-border-subtle); padding: var(--spacing-1); }
+  .chip__sw { display: block; height: 2rem; margin-bottom: var(--spacing-1); }
+  .chip b { font-size: 12px; font-weight: var(--font-weight-semibold); }
+  .chip code, .chip .v { display: block; overflow-wrap: anywhere; }
+
+  /* Spacing property demos */
+  .props { display: flex; flex-wrap: wrap; gap: var(--spacing-4); margin-top: var(--spacing-4); }
+  .prop { flex: 1 1 200px; border: 1px solid var(--color-border-subtle); padding: var(--spacing-3); font-size: var(--font-size-caption); }
+  .prop code, .prop .v { display: block; }
+  .prop__demo { display: flex; align-items: center; min-height: 3rem; margin-top: var(--spacing-2); border: 1px dashed var(--color-border-default); }
+  .prop__demo i { width: 1.25rem; height: 1.25rem; background: var(--color-secondary); display: block; }
+  .prop__g { display: flex; }
+
+  /* Typography samples */
+  .row__type { margin: 0; }
+  .row__type .v { font-size: 12px; }
+  .wt { display: inline-block; font-size: var(--font-size-body-lg); }
+  .row--heading .row__type { font-weight: var(--font-weight-semibold); }
+
+  /* Radius / shadow / motion specimens */
+  .swatch-box { width: 3.5rem; height: 2.25rem; background: var(--color-primary); }
+  .shadow-card { background: var(--color-surface-default); padding: var(--spacing-3) var(--spacing-4); font-size: var(--font-size-caption); }
+  .shadow-stage { background: var(--color-surface-page); padding: var(--spacing-4); }
+  .demo-move {
+    display: inline-block;
+    margin-top: var(--spacing-3);
+    padding: var(--spacing-3) var(--spacing-4);
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-caption);
+    cursor: pointer;
+    transition: transform var(--motion-duration-base) var(--motion-easing-standard);
+  }
+  .demo-move:hover, .demo-move:focus-visible { transform: translateY(-6px); }
+
+  /* Every Motion row runs its own duration/easing token */
+  .row--motion .row__demo {
+    cursor: pointer;
+    background: var(--color-primary);
+    transition: transform var(--motion-duration-base) var(--motion-easing-standard);
+  }
+  .row--motion .row__demo:hover,
+  .row--motion .row__demo:focus-visible { transform: scaleX(.35); }
+  .row--motion .row__demo--fast { transition-duration: var(--motion-duration-fast); }
+  .row--motion .row__demo--slow { transition-duration: var(--motion-duration-slow); }
+  @media (prefers-reduced-motion: reduce) {
+    .demo-move, .row--motion .row__demo { transition: none; }
+  }
+
+  /* Icons */
+  .icons { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-4); }
+  .ico { border: 1px solid var(--color-border-subtle); padding: var(--spacing-3); font-size: var(--font-size-caption); text-align: center; }
+  .ico .glyph { display: block; font-size: 1.75rem; margin-bottom: var(--spacing-2); color: var(--color-text-primary); }
+  .ico .glyph--danger { color: var(--color-danger); }
+  .ico code { display: block; overflow-wrap: anywhere; }
+
+  footer { padding: var(--spacing-4) 0 var(--spacing-8); color: var(--color-text-secondary); font-size: var(--font-size-caption); }
+  footer p { max-width: 75ch; margin: 0; }
+  footer code { color: var(--color-text-accent); }
+
+  @media (max-width: 720px) {
+    .row { grid-template-columns: 1fr 1fr; }
+    .row > .v, .row__demo, .row__bar { grid-column: 1 / -1; }
+    .prim__row { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>ds-base <span>· Token Reference</span></h1>
+    <p>Visual smoke test. Every sample renders through real CSS Custom Properties from the compiled design system — nothing is hardcoded. Edit an SCSS token, run <code>pnpm build:reference</code>, reload. Each row reads: name · <code>--variable</code> · computed value · visual sample; deep-link any row with <code>#--token</code>.</p>
+  </div>
+</header>
+<div class="navbar">
+  <div class="wrap">
+    <nav aria-label="Sections">
+      <ul>
+        <li><a href="#colors">Colors</a></li>
+        <li><a href="#spacing">Spacing</a></li>
+        <li><a href="#typography">Typography</a></li>
+        <li><a href="#radius">Radius</a></li>
+        <li><a href="#shadows">Shadows</a></li>
+        <li><a href="#motion">Motion</a></li>
+        <li><a href="#icons">Icons</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- 1 · COLORS -->
+  <section id="colors">
+    <h2>1 · Colors</h2>
+    <p class="note">Semantic tokens are emitted by the core. Primitive values come from <code>$color-primitives</code> via the <code>--ref-*</code> variables generated by this page's build (same Sass map — no copy).</p>
+
+    <div class="row" data-token="--color-primary"><span class="row__name">primary</span><code>--color-primary</code><span class="v"></span><span class="row__demo" style="background:var(--color-primary)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-secondary"><span class="row__name">secondary</span><code>--color-secondary</code><span class="v"></span><span class="row__demo" style="background:var(--color-secondary)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-success"><span class="row__name">success</span><code>--color-success</code><span class="v"></span><span class="row__demo" style="background:var(--color-success)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-warning"><span class="row__name">warning</span><code>--color-warning</code><span class="v"></span><span class="row__demo" style="background:var(--color-warning)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-danger"><span class="row__name">danger</span><code>--color-danger</code><span class="v"></span><span class="row__demo" style="background:var(--color-danger)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-info"><span class="row__name">info</span><code>--color-info</code><span class="v"></span><span class="row__demo" style="background:var(--color-info)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-text-primary"><span class="row__name">text/primary</span><code>--color-text-primary</code><span class="v"></span><span class="row__demo" style="background:var(--color-text-primary)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-text-secondary"><span class="row__name">text/secondary</span><code>--color-text-secondary</code><span class="v"></span><span class="row__demo" style="background:var(--color-text-secondary)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-text-accent"><span class="row__name">text/accent</span><code>--color-text-accent</code><span class="v"></span><span class="row__demo" style="background:var(--color-text-accent)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-text-gray"><span class="row__name">text/gray</span><code>--color-text-gray</code><span class="v"></span><span class="row__demo" style="background:var(--color-text-gray)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-text-white"><span class="row__name">text/white</span><code>--color-text-white</code><span class="v"></span><span class="row__demo" style="background:var(--color-text-white)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-text-inverse"><span class="row__name">text/inverse</span><code>--color-text-inverse</code><span class="v"></span><span class="row__demo" style="background:var(--color-text-inverse)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-surface-default"><span class="row__name">surface/default</span><code>--color-surface-default</code><span class="v"></span><span class="row__demo" style="background:var(--color-surface-default)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-surface-page"><span class="row__name">surface/page</span><code>--color-surface-page</code><span class="v"></span><span class="row__demo" style="background:var(--color-surface-page)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-surface-inverse"><span class="row__name">surface/inverse</span><code>--color-surface-inverse</code><span class="v"></span><span class="row__demo" style="background:var(--color-surface-inverse)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-border-default"><span class="row__name">border/default</span><code>--color-border-default</code><span class="v"></span><span class="row__demo" style="background:var(--color-border-default)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-border-subtle"><span class="row__name">border/subtle</span><code>--color-border-subtle</code><span class="v"></span><span class="row__demo" style="background:var(--color-border-subtle)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--color-border-inverse"><span class="row__name">border/inverse</span><code>--color-border-inverse</code><span class="v"></span><span class="row__demo" style="background:var(--color-border-inverse)" aria-hidden="true"></span></div>
+
+    <h3 class="prim__title">Primitives</h3>
+
+    <div class="prim">
+      <h4>neutral</h4>
+      <div class="prim__row">
+        <div class="chip" data-token="--ref-neutral-white"><span class="chip__sw" style="background:var(--ref-neutral-white)"></span><b>white</b><code>--ref-neutral-white</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-neutral-100"><span class="chip__sw" style="background:var(--ref-neutral-100)"></span><b>100</b><code>--ref-neutral-100</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-neutral-150"><span class="chip__sw" style="background:var(--ref-neutral-150)"></span><b>150</b><code>--ref-neutral-150</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-neutral-200"><span class="chip__sw" style="background:var(--ref-neutral-200)"></span><b>200</b><code>--ref-neutral-200</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-neutral-300"><span class="chip__sw" style="background:var(--ref-neutral-300)"></span><b>300</b><code>--ref-neutral-300</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-neutral-400"><span class="chip__sw" style="background:var(--ref-neutral-400)"></span><b>400</b><code>--ref-neutral-400</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-neutral-500"><span class="chip__sw" style="background:var(--ref-neutral-500)"></span><b>500</b><code>--ref-neutral-500</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-neutral-600"><span class="chip__sw" style="background:var(--ref-neutral-600)"></span><b>600</b><code>--ref-neutral-600</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-neutral-700"><span class="chip__sw" style="background:var(--ref-neutral-700)"></span><b>700</b><code>--ref-neutral-700</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-neutral-800"><span class="chip__sw" style="background:var(--ref-neutral-800)"></span><b>800</b><code>--ref-neutral-800</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-neutral-900"><span class="chip__sw" style="background:var(--ref-neutral-900)"></span><b>900</b><code>--ref-neutral-900</code><span class="v"></span></div>
+      </div>
+    </div>
+
+    <div class="prim">
+      <h4>blue</h4>
+      <div class="prim__row">
+        <div class="chip" data-token="--ref-blue-100"><span class="chip__sw" style="background:var(--ref-blue-100)"></span><b>100</b><code>--ref-blue-100</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-blue-300"><span class="chip__sw" style="background:var(--ref-blue-300)"></span><b>300</b><code>--ref-blue-300</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-blue-400"><span class="chip__sw" style="background:var(--ref-blue-400)"></span><b>400</b><code>--ref-blue-400</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-blue-500"><span class="chip__sw" style="background:var(--ref-blue-500)"></span><b>500</b><code>--ref-blue-500</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-blue-700"><span class="chip__sw" style="background:var(--ref-blue-700)"></span><b>700</b><code>--ref-blue-700</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-blue-900"><span class="chip__sw" style="background:var(--ref-blue-900)"></span><b>900</b><code>--ref-blue-900</code><span class="v"></span></div>
+      </div>
+    </div>
+
+    <div class="prim">
+      <h4>blue-transparent</h4>
+      <div class="prim__row">
+        <div class="chip" data-token="--ref-blue-transparent-100"><span class="chip__sw" style="background:var(--ref-blue-transparent-100)"></span><b>100</b><code>--ref-blue-transparent-100</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-blue-transparent-300"><span class="chip__sw" style="background:var(--ref-blue-transparent-300)"></span><b>300</b><code>--ref-blue-transparent-300</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-blue-transparent-400"><span class="chip__sw" style="background:var(--ref-blue-transparent-400)"></span><b>400</b><code>--ref-blue-transparent-400</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-blue-transparent-500"><span class="chip__sw" style="background:var(--ref-blue-transparent-500)"></span><b>500</b><code>--ref-blue-transparent-500</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-blue-transparent-900"><span class="chip__sw" style="background:var(--ref-blue-transparent-900)"></span><b>900</b><code>--ref-blue-transparent-900</code><span class="v"></span></div>
+      </div>
+    </div>
+
+    <div class="prim">
+      <h4>green</h4>
+      <div class="prim__row">
+        <div class="chip" data-token="--ref-green-100"><span class="chip__sw" style="background:var(--ref-green-100)"></span><b>100</b><code>--ref-green-100</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-green-200"><span class="chip__sw" style="background:var(--ref-green-200)"></span><b>200</b><code>--ref-green-200</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-green-400"><span class="chip__sw" style="background:var(--ref-green-400)"></span><b>400</b><code>--ref-green-400</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-green-500"><span class="chip__sw" style="background:var(--ref-green-500)"></span><b>500</b><code>--ref-green-500</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-green-600"><span class="chip__sw" style="background:var(--ref-green-600)"></span><b>600</b><code>--ref-green-600</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-green-900"><span class="chip__sw" style="background:var(--ref-green-900)"></span><b>900</b><code>--ref-green-900</code><span class="v"></span></div>
+      </div>
+    </div>
+
+    <div class="prim">
+      <h4>orange</h4>
+      <div class="prim__row">
+        <div class="chip" data-token="--ref-orange-100"><span class="chip__sw" style="background:var(--ref-orange-100)"></span><b>100</b><code>--ref-orange-100</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-orange-300"><span class="chip__sw" style="background:var(--ref-orange-300)"></span><b>300</b><code>--ref-orange-300</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-orange-400"><span class="chip__sw" style="background:var(--ref-orange-400)"></span><b>400</b><code>--ref-orange-400</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-orange-500"><span class="chip__sw" style="background:var(--ref-orange-500)"></span><b>500</b><code>--ref-orange-500</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-orange-700"><span class="chip__sw" style="background:var(--ref-orange-700)"></span><b>700</b><code>--ref-orange-700</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-orange-900"><span class="chip__sw" style="background:var(--ref-orange-900)"></span><b>900</b><code>--ref-orange-900</code><span class="v"></span></div>
+      </div>
+    </div>
+
+    <div class="prim">
+      <h4>red</h4>
+      <div class="prim__row">
+        <div class="chip" data-token="--ref-red-100"><span class="chip__sw" style="background:var(--ref-red-100)"></span><b>100</b><code>--ref-red-100</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-red-300"><span class="chip__sw" style="background:var(--ref-red-300)"></span><b>300</b><code>--ref-red-300</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-red-500"><span class="chip__sw" style="background:var(--ref-red-500)"></span><b>500</b><code>--ref-red-500</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-red-700"><span class="chip__sw" style="background:var(--ref-red-700)"></span><b>700</b><code>--ref-red-700</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-red-900"><span class="chip__sw" style="background:var(--ref-red-900)"></span><b>900</b><code>--ref-red-900</code><span class="v"></span></div>
+      </div>
+    </div>
+
+    <div class="prim">
+      <h4>yellow</h4>
+      <div class="prim__row">
+        <div class="chip" data-token="--ref-yellow-100"><span class="chip__sw" style="background:var(--ref-yellow-100)"></span><b>100</b><code>--ref-yellow-100</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-yellow-300"><span class="chip__sw" style="background:var(--ref-yellow-300)"></span><b>300</b><code>--ref-yellow-300</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-yellow-500"><span class="chip__sw" style="background:var(--ref-yellow-500)"></span><b>500</b><code>--ref-yellow-500</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-yellow-700"><span class="chip__sw" style="background:var(--ref-yellow-700)"></span><b>700</b><code>--ref-yellow-700</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-yellow-900"><span class="chip__sw" style="background:var(--ref-yellow-900)"></span><b>900</b><code>--ref-yellow-900</code><span class="v"></span></div>
+      </div>
+    </div>
+
+    <div class="prim">
+      <h4>purple</h4>
+      <div class="prim__row">
+        <div class="chip" data-token="--ref-purple-100"><span class="chip__sw" style="background:var(--ref-purple-100)"></span><b>100</b><code>--ref-purple-100</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-purple-300"><span class="chip__sw" style="background:var(--ref-purple-300)"></span><b>300</b><code>--ref-purple-300</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-purple-500"><span class="chip__sw" style="background:var(--ref-purple-500)"></span><b>500</b><code>--ref-purple-500</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-purple-700"><span class="chip__sw" style="background:var(--ref-purple-700)"></span><b>700</b><code>--ref-purple-700</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-purple-900"><span class="chip__sw" style="background:var(--ref-purple-900)"></span><b>900</b><code>--ref-purple-900</code><span class="v"></span></div>
+      </div>
+    </div>
+
+    <div class="prim">
+      <h4>teal</h4>
+      <div class="prim__row">
+        <div class="chip" data-token="--ref-teal-100"><span class="chip__sw" style="background:var(--ref-teal-100)"></span><b>100</b><code>--ref-teal-100</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-teal-300"><span class="chip__sw" style="background:var(--ref-teal-300)"></span><b>300</b><code>--ref-teal-300</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-teal-500"><span class="chip__sw" style="background:var(--ref-teal-500)"></span><b>500</b><code>--ref-teal-500</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-teal-700"><span class="chip__sw" style="background:var(--ref-teal-700)"></span><b>700</b><code>--ref-teal-700</code><span class="v"></span></div>
+        <div class="chip" data-token="--ref-teal-900"><span class="chip__sw" style="background:var(--ref-teal-900)"></span><b>900</b><code>--ref-teal-900</code><span class="v"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · SPACING -->
+  <section id="spacing">
+    <h2>2 · Spacing</h2>
+    <p class="note">Bar width and height are driven by the token itself — the scale stays proportional. The three cards below prove <code>height</code>, <code>margin</code> and <code>gap</code> consume the same variables.</p>
+
+    <div class="row" data-token="--spacing-0"><span class="row__name">spacing/0</span><code>--spacing-0</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-0)"></i></span></div>
+    <div class="row" data-token="--spacing-1"><span class="row__name">spacing/1</span><code>--spacing-1</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-1)"></i></span></div>
+    <div class="row" data-token="--spacing-2"><span class="row__name">spacing/2</span><code>--spacing-2</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-2)"></i></span></div>
+    <div class="row" data-token="--spacing-3"><span class="row__name">spacing/3</span><code>--spacing-3</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-3)"></i></span></div>
+    <div class="row" data-token="--spacing-4"><span class="row__name">spacing/4</span><code>--spacing-4</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-4)"></i></span></div>
+    <div class="row" data-token="--spacing-6"><span class="row__name">spacing/6</span><code>--spacing-6</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-6)"></i></span></div>
+    <div class="row" data-token="--spacing-8"><span class="row__name">spacing/8</span><code>--spacing-8</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-8)"></i></span></div>
+    <div class="row" data-token="--spacing-12"><span class="row__name">spacing/12</span><code>--spacing-12</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-12)"></i></span></div>
+    <div class="row" data-token="--spacing-16"><span class="row__name">spacing/16</span><code>--spacing-16</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-16)"></i></span></div>
+    <div class="row" data-token="--spacing-24"><span class="row__name">spacing/24</span><code>--spacing-24</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-24)"></i></span></div>
+    <div class="row" data-token="--spacing-32"><span class="row__name">spacing/32</span><code>--spacing-32</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-32)"></i></span></div>
+    <div class="row" data-token="--spacing-48"><span class="row__name">spacing/48</span><code>--spacing-48</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-48)"></i></span></div>
+    <div class="row" data-token="--spacing-56"><span class="row__name">spacing/56</span><code>--spacing-56</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-56)"></i></span></div>
+    <div class="row" data-token="--spacing-64"><span class="row__name">spacing/64</span><code>--spacing-64</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-64)"></i></span></div>
+    <div class="row" data-token="--spacing-72"><span class="row__name">spacing/72</span><code>--spacing-72</code><span class="v"></span><span class="row__bar" aria-hidden="true"><i style="width:var(--spacing-72)"></i></span></div>
+
+    <div class="props">
+      <div class="prop" data-token="--spacing-16">
+        <code>height: var(--spacing-16)</code><span class="v"></span>
+        <span class="prop__demo" aria-hidden="true"><i style="height:var(--spacing-16);width:1.25rem"></i></span>
+      </div>
+      <div class="prop" data-token="--spacing-8">
+        <code>margin: var(--spacing-8)</code><span class="v"></span>
+        <span class="prop__demo" aria-hidden="true"><i style="margin:var(--spacing-8)"></i></span>
+      </div>
+      <div class="prop" data-token="--spacing-6">
+        <code>gap: var(--spacing-6)</code><span class="v"></span>
+        <span class="prop__demo prop__g" style="gap:var(--spacing-6)" aria-hidden="true"><i></i><i></i><i></i></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · TYPOGRAPHY -->
+  <section id="typography">
+    <h2>3 · Typography</h2>
+    <p class="note">Real type scale rendered as text. The value column is read from the computed style of the specimen. Heading specimens pair the size token with <code>--font-weight-semibold</code>, the weight this page's own headings use.</p>
+
+    <div class="row" data-token="--font-family-base"><span class="row__name">font/family-base</span><code>--font-family-base</code><span class="v"></span><p class="row__type" data-sample style="font-family:var(--font-family-base)">The quick brown fox jumps over the lazy dog</p></div>
+
+    <div class="row" data-typo><span class="row__name">caption</span><code>--font-size-caption</code><span class="v"></span><p class="row__type" data-sample style="font-size:var(--font-size-caption)">The quick brown fox jumps over the lazy dog</p></div>
+    <div class="row" data-typo><span class="row__name">body</span><code>--font-size-body</code><span class="v"></span><p class="row__type" data-sample style="font-size:var(--font-size-body)">The quick brown fox jumps over the lazy dog</p></div>
+    <div class="row" data-typo><span class="row__name">body-lg</span><code>--font-size-body-lg</code><span class="v"></span><p class="row__type" data-sample style="font-size:var(--font-size-body-lg)">The quick brown fox jumps over the lazy dog</p></div>
+    <div class="row row--heading" data-typo><span class="row__name">heading-xs</span><code>--font-size-heading-xs</code><span class="v"></span><p class="row__type" data-sample style="font-size:var(--font-size-heading-xs)">The quick brown fox jumps</p></div>
+    <div class="row row--heading" data-typo><span class="row__name">heading-sm</span><code>--font-size-heading-sm</code><span class="v"></span><p class="row__type" data-sample style="font-size:var(--font-size-heading-sm)">The quick brown fox jumps</p></div>
+    <div class="row row--heading" data-typo><span class="row__name">heading-md</span><code>--font-size-heading-md</code><span class="v"></span><p class="row__type" data-sample style="font-size:var(--font-size-heading-md)">The quick brown fox</p></div>
+    <div class="row row--heading" data-typo><span class="row__name">heading-lg</span><code>--font-size-heading-lg</code><span class="v"></span><p class="row__type" data-sample style="font-size:var(--font-size-heading-lg)">The quick brown fox</p></div>
+
+    <div class="row" data-typo><span class="row__name">weight/light</span><code>--font-weight-light</code><span class="v"></span><p class="row__type wt" data-sample data-wt style="font-weight:var(--font-weight-light)">Aa</p></div>
+    <div class="row" data-typo><span class="row__name">weight/regular</span><code>--font-weight-regular</code><span class="v"></span><p class="row__type wt" data-sample data-wt style="font-weight:var(--font-weight-regular)">Aa</p></div>
+    <div class="row" data-typo><span class="row__name">weight/medium</span><code>--font-weight-medium</code><span class="v"></span><p class="row__type wt" data-sample data-wt style="font-weight:var(--font-weight-medium)">Aa</p></div>
+    <div class="row" data-typo><span class="row__name">weight/semibold</span><code>--font-weight-semibold</code><span class="v"></span><p class="row__type wt" data-sample data-wt style="font-weight:var(--font-weight-semibold)">Aa</p></div>
+    <div class="row" data-typo><span class="row__name">weight/bold</span><code>--font-weight-bold</code><span class="v"></span><p class="row__type wt" data-sample data-wt style="font-weight:var(--font-weight-bold)">Aa</p></div>
+  </section>
+
+  <!-- 4 · RADIUS -->
+  <section id="radius">
+    <h2>4 · Radius</h2>
+    <p class="note">Every box uses <code>border-radius: var(--radius-*)</code>.</p>
+
+    <div class="row" data-token="--radius-none"><span class="row__name">none</span><code>--radius-none</code><span class="v"></span><span class="row__demo swatch-box" style="border-radius:var(--radius-none)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--radius-xs"><span class="row__name">xs</span><code>--radius-xs</code><span class="v"></span><span class="row__demo swatch-box" style="border-radius:var(--radius-xs)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--radius-sm"><span class="row__name">sm</span><code>--radius-sm</code><span class="v"></span><span class="row__demo swatch-box" style="border-radius:var(--radius-sm)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--radius-md"><span class="row__name">md</span><code>--radius-md</code><span class="v"></span><span class="row__demo swatch-box" style="border-radius:var(--radius-md)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--radius-lg"><span class="row__name">lg</span><code>--radius-lg</code><span class="v"></span><span class="row__demo swatch-box" style="border-radius:var(--radius-lg)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--radius-xl"><span class="row__name">xl</span><code>--radius-xl</code><span class="v"></span><span class="row__demo swatch-box" style="border-radius:var(--radius-xl)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--radius-2-xl"><span class="row__name">2-xl</span><code>--radius-2-xl</code><span class="v"></span><span class="row__demo swatch-box" style="border-radius:var(--radius-2-xl)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--radius-3-xl"><span class="row__name">3-xl</span><code>--radius-3-xl</code><span class="v"></span><span class="row__demo swatch-box" style="border-radius:var(--radius-3-xl)" aria-hidden="true"></span></div>
+    <div class="row" data-token="--radius-full"><span class="row__name">full</span><code>--radius-full</code><span class="v"></span><span class="row__demo swatch-box" style="border-radius:var(--radius-full)" aria-hidden="true"></span></div>
+  </section>
+
+  <!-- 5 · SHADOWS -->
+  <section id="shadows">
+    <h2>5 · Shadows</h2>
+    <p class="note">The core shadows applied verbatim — nothing invented here.</p>
+
+    <div class="row" data-token="--shadow-sm"><span class="row__name">sm</span><code>--shadow-sm</code><span class="v"></span><span class="shadow-stage"><span class="shadow-card" style="box-shadow:var(--shadow-sm)">shadow sm</span></span></div>
+    <div class="row" data-token="--shadow-md"><span class="row__name">md</span><code>--shadow-md</code><span class="v"></span><span class="shadow-stage"><span class="shadow-card" style="box-shadow:var(--shadow-md)">shadow md</span></span></div>
+    <div class="row" data-token="--shadow-lg"><span class="row__name">lg</span><code>--shadow-lg</code><span class="v"></span><span class="shadow-stage"><span class="shadow-card" style="box-shadow:var(--shadow-lg)">shadow lg</span></span></div>
+    <div class="row" data-token="--shadow-xl"><span class="row__name">xl</span><code>--shadow-xl</code><span class="v"></span><span class="shadow-stage"><span class="shadow-card" style="box-shadow:var(--shadow-xl)">shadow xl</span></span></div>
+  </section>
+
+  <!-- 6 · MOTION -->
+  <section id="motion">
+    <h2>6 · Motion</h2>
+    <p class="note">Hover or focus a bar to feel each duration; the box below combines <code>--motion-duration-base</code> with <code>--motion-easing-standard</code>. Demos honor <code>prefers-reduced-motion</code>.</p>
+
+    <div class="row row--motion" data-token="--motion-duration-fast"><span class="row__name">duration/fast</span><code>--motion-duration-fast</code><span class="v"></span><span class="row__demo row__demo--fast" tabindex="0" role="img" aria-label="duration fast demo, hover or focus to run"></span></div>
+    <div class="row row--motion" data-token="--motion-duration-base"><span class="row__name">duration/base</span><code>--motion-duration-base</code><span class="v"></span><span class="row__demo" tabindex="0" role="img" aria-label="duration base demo, hover or focus to run"></span></div>
+    <div class="row row--motion" data-token="--motion-duration-slow"><span class="row__name">duration/slow</span><code>--motion-duration-slow</code><span class="v"></span><span class="row__demo row__demo--slow" tabindex="0" role="img" aria-label="duration slow demo, hover or focus to run"></span></div>
+    <div class="row row--motion" data-token="--motion-easing-standard"><span class="row__name">easing/standard</span><code>--motion-easing-standard</code><span class="v"></span><span class="row__demo" tabindex="0" role="img" aria-label="easing standard demo, hover or focus to run"></span></div>
+
+    <span class="demo-move" tabindex="0">hover / focus me</span>
+  </section>
+
+  <!-- 7 · ICONS -->
+  <section id="icons">
+    <h2>7 · Icons</h2>
+    <p class="note">Only the core contract <code>.ds-icon</code> (box 1em × 1em, inherits color, no stroke/fill assumptions). Four cards use the optional Bootstrap Icons adapter — fonts served from <code>adapters/icons/bootstrap/assets/</code>, not copied. Every glyph inherits its surrounding text color.</p>
+
+    <div class="icons">
+      <div class="ico">
+        <span class="glyph" aria-hidden="true"><svg class="ds-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <code>.ds-icon</code>
+        <span>inline SVG · provider handles stroke</span>
+      </div>
+      <div class="ico">
+        <span class="glyph" aria-hidden="true"><svg class="ds-icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg></span>
+        <code>.ds-icon</code>
+        <span>inline SVG · provider handles fill</span>
+      </div>
+      <div class="ico">
+        <span class="glyph" aria-hidden="true"><i class="bi bi-check2 ds-icon"></i></span>
+        <code>.bi.bi-check2.ds-icon</code>
+        <span>adapter · font icon</span>
+      </div>
+      <div class="ico">
+        <span class="glyph" aria-hidden="true"><i class="bi bi-arrow-right ds-icon"></i></span>
+        <code>.bi.bi-arrow-right.ds-icon</code>
+        <span>adapter · font icon</span>
+      </div>
+      <div class="ico">
+        <span class="glyph glyph--danger" aria-hidden="true"><i class="bi bi-heart-fill ds-icon"></i></span>
+        <code>color: var(--color-danger)</code>
+        <span>inherits surrounding text color</span>
+      </div>
+      <div class="ico">
+        <span class="glyph" aria-hidden="true"><i class="bi bi-gear-fill ds-icon" style="font-size:1rem"></i> <i class="bi bi-gear-fill ds-icon" style="font-size:1.5rem"></i> <i class="bi bi-gear-fill ds-icon" style="font-size:2rem"></i></span>
+        <code>font-size: 1 / 1.5 / 2rem</code>
+        <span>em-based box scales</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <p>Source of truth: <code>src/tokens/*.scss</code> → <code>pnpm build:reference</code> → <code>docs/token-reference/ds-base.css</code> → this page. Brand slots configured in <code>docs/token-reference/reference.scss</code>.</p>
+</footer>
+
+<script>
+// Minimal: print the real values from the compiled CSS Custom
+// Properties and the computed styles of the specimens.
+(function () {
+  var rootStyle = getComputedStyle(document.documentElement);
+  function fill(scope, text) {
+    var slot = scope.querySelector(".v");
+    if (slot) slot.textContent = text;
+  }
+  document.querySelectorAll("[data-token]").forEach(function (scope) {
+    var token = scope.dataset.token;
+    fill(scope, rootStyle.getPropertyValue(token).trim() || "—");
+    if (!document.getElementById(token)) scope.id = token;
+  });
+  document.querySelectorAll("[data-typo]").forEach(function (scope) {
+    var sample = scope.querySelector("[data-sample]");
+    var s = getComputedStyle(sample);
+    fill(scope, s.fontSize + " · " + s.fontWeight + " · lh " + s.lineHeight);
+    if (sample.hasAttribute("data-wt")) sample.textContent = "Aa · " + s.fontWeight + " sample";
+  });
+  var navbar = document.querySelector(".navbar");
+  if (navbar) document.documentElement.style.scrollPaddingTop = navbar.offsetHeight + "px";
+})();
+</script>
+</body>
+</html>

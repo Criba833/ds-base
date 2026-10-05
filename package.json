@@ -1,0 +1,36 @@
+{
+  "name": "@spirocode/ds-base",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Design System foundation: Sass tokens, functions, mixins and CSS Custom Properties. Sass at build time, CSS custom properties at runtime.",
+  "scripts": {
+    "build": "sass index.scss dist/ds-base.css --no-source-map",
+    "build:reference": "sass docs/token-reference/reference.scss docs/token-reference/ds-base.css --no-source-map"
+  },
+  "exports": {
+    ".": "./index.scss",
+    "./api": "./api.scss",
+    "./adapters/liferay": "./adapters/liferay/index.scss",
+    "./adapters/icons/bootstrap": "./adapters/icons/bootstrap/index.scss",
+    "./src/*": "./src/*",
+    "./adapters/*": "./adapters/*"
+  },
+  "files": [
+    "index.scss",
+    "api.scss",
+    "src",
+    "adapters",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "keywords": [
+    "design-system",
+    "sass",
+    "scss",
+    "tokens",
+    "css-custom-properties"
+  ],
+  "peerDependencies": {
+    "sass": "^1.70.0"
+  }
+}

@@ -1,0 +1,81 @@
+// Semantic color tokens map product intent to primitive color values.
+//
+// "primary" and "secondary" are brand slots filled from
+// tokens/_brand.scss. ds-base ships them unconfigured (null):
+// the consumer owns the brand identity.
+@use "brand" as brand;
+
+$semantic-colors: (
+  "primary": brand.$brand-primary,
+  "secondary": brand.$brand-secondary,
+  "success": (
+    "green",
+    "500",
+  ),
+  "warning": (
+    "yellow",
+    "500",
+  ),
+  "danger": (
+    "red",
+    "500",
+  ),
+  "info": (
+    "blue",
+    "400",
+  ),
+  "text": (
+    "primary": (
+      "neutral",
+      "900",
+    ),
+    "secondary": (
+      "neutral",
+      "600",
+    ),
+    "accent": (
+      "blue",
+      "500",
+    ),
+    "gray": (
+      "neutral",
+      "400",
+    ),
+    "white": (
+      "neutral",
+      "white",
+    ),
+    "inverse": (
+      "neutral",
+      "white",
+    ),
+  ),
+  "surface": (
+    "default": (
+      "neutral",
+      "white",
+    ),
+    "page": (
+      "neutral",
+      "100",
+    ),
+    "inverse": (
+      "neutral",
+      "900",
+    ),
+  ),
+  "border": (
+    "default": (
+      "neutral",
+      "400",
+    ),
+    "subtle": (
+      "neutral",
+      "200",
+    ),
+    "inverse": (
+      "neutral",
+      "white",
+    ),
+  ),
+) !default;

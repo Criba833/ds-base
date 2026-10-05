@@ -1,0 +1,20 @@
+// Liferay Fragments wrapper
+//
+// Liferay injects a technical wrapper around fragment
+// content:
+//
+// <section fragment="hero-banner">
+//   <section class="hero-banner">...</section>
+// </section>
+//
+// CSS Grid and Flex only lay out direct children. Without
+// this rule the wrapper becomes the grid item instead of
+// the fragment itself.
+//
+// display: contents removes the wrapper from the layout
+// tree while preserving it in the DOM (fragment
+// identification, runtime hooks, DevTools inspection).
+
+section[fragment] {
+  display: contents;
+}

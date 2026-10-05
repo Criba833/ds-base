@@ -1,0 +1,17 @@
+// Liferay adapter (optional)
+//
+// NOT part of the ds-base core. Import it explicitly when
+// the consumer runs inside Liferay:
+//
+//   @use "@spirocode/ds-base/adapters/liferay";
+//
+// Provides:
+//   - bridge:    Clay / Style Book CSS Custom Properties
+//                translated from ds-base tokens
+//   - fragments: Liferay fragment preview wrapper
+//                (section[fragment] { display: contents })
+//
+// The core of ds-base never imports this adapter.
+
+@forward "bridge";
+@forward "fragments";

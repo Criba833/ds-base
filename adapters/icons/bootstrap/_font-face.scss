@@ -1,0 +1,62 @@
+// Bootstrap Icons font provider — OPTIONAL ADAPTER
+//
+// NOT part of the ds-base core. The core only defines the
+// icon contract (src/icons/_contract.scss); this adapter
+// supplies one concrete provider. Import it explicitly:
+//
+//   @use "@spirocode/ds-base/adapters/icons/bootstrap";
+//
+// Consumers may choose any other provider (Lucide, Google
+// Material Symbols, custom…) without modifying ds-base
+// tokens or core architecture.
+
+$icon-provider: 'local' !default;
+$icon-base-url: '' !default;
+$icon-set: 'bootstrap' !default;
+$icon-font-family: 'bootstrap-icons' !default;
+$icon-font-display: block !default;
+
+// Remote slug style:
+//   'plain'     — keeps the file extension
+//                 (bootstrap-icons.woff2), the usual
+//                 CDN/static-host behaviour.
+//   'liferay-dm' — legacy Delivery & Media asset URLs
+//                 strip the dot
+//                 (bootstrap-icons.woff2 →
+//                 bootstrap-iconswoff2). Kept for
+//                 compatibility with previous deployments.
+$icon-remote-slug: 'plain' !default;
+
+@use "sass:string";
+@use "provider" as provider;
+
+@function _icon-font-url($file) {
+  @if $icon-provider == 'local' {
+    @return url('/icons/#{$file}');
+  } @else {
+    $slug: $file;
+
+    @if $icon-remote-slug == 'liferay-dm' {
+      $dot: string.index($file, '.');
+      @if $dot {
+        $slug: string.slice($file, 1, $dot - 1) +
+          string.slice($file, $dot + 1);
+      }
+    }
+
+    @return url('#{$icon-base-url}/#{$slug}');
+  }
+}
+
+@if $icon-set == 'bootstrap' {
+  @if $icon-provider != 'skip' {
+    @font-face {
+      font-display: $icon-font-display;
+      font-family: $icon-font-family;
+      src: _icon-font-url('bootstrap-icons.woff2') format('woff2'),
+           _icon-font-url('bootstrap-icons.woff') format('woff');
+    }
+  }
+
+  @include provider.init;
+}

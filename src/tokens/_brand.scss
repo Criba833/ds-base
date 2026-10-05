@@ -1,0 +1,22 @@
+// Brand identity slots
+//
+// ds-base does not define a visual identity. `primary` and
+// `secondary` are configuration slots: the consumer points them
+// at a [primitive, shade] pair from $color-primitives.
+//
+//   @use "@spirocode/ds-base" with (
+//     $brand-primary: ("blue", "500"),
+//     $brand-secondary: ("green", "500"),
+//   );
+//
+// While unconfigured (null):
+//   - no --color-primary / --color-secondary is emitted;
+//   - ds.color("primary") fails at compile time with an
+//     explicit error;
+//   - the .ds-bg-primary helper is not emitted.
+//
+// The previous application brand values (blue-gou / green-gou)
+// were removed from the core — see git history for reference.
+
+$brand-primary: null !default;
+$brand-secondary: null !default;

@@ -1,0 +1,30 @@
+// Generic layout helpers.
+//
+// The application scaffold (.ds-grid, .ds-section) was removed
+// from the core (previous-app specific — see git history) and
+// the Liferay fragment wrapper (section[fragment]) lives in the
+// optional adapters/liferay/.
+
+@use "../mixins" as mx;
+
+// Even Columns
+//
+// Creates equal-width responsive columns.
+//
+// Usage:
+//
+// <div class="ds-even-columns">
+//   ...
+// </div>
+
+.ds-even-columns {
+  width: 100%;
+
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-columns: 1fr;
+
+  @include mx.mq("lg") {
+    grid-auto-flow: column;
+  }
+}

@@ -1,0 +1,16 @@
+// ds-base — API only
+//
+// Entry point for consumers that need Sass functions,
+// mixins and tokens WITHOUT generating any CSS output.
+//
+// Use this instead of @use "@spirocode/ds-base" when the
+// full ds-base CSS is already loaded globally.
+//
+// Usage:
+//
+//   @use "@spirocode/ds-base/api" as ds;
+//   .my-class { padding: ds.space(4); color: ds.color("text", "primary"); }
+
+@forward "src/tokens";
+@forward "src/functions";
+@forward "src/mixins";
