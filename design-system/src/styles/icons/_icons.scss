@@ -1,0 +1,42 @@
+// Icons module
+//
+// Sass module system limitation: this module declares its own !default
+// variables for configuration. The host provides concrete values via
+// the bridge's @use ... with (...).
+//
+// Default: no icon set is loaded ('none'). The host must set $icon-set
+// to 'bootstrap' (or future providers) to enable icon fonts.
+
+$icon-provider: 'local' !default;
+$icon-base-url: '' !default;
+$icon-set: 'none' !default;
+$icon-font-family: 'bootstrap-icons' !default;
+$icon-font-display: block !default;
+
+@use "sass:string";
+@use "bootstrap-provider" as provider;
+
+@function _icon-font-url($file) {
+  @if $icon-provider == 'local' {
+    @return url('/icons/#{$file}');
+  } @else {
+    // Liferay D&M slugs have no extension dot: bootstrap-icons.woff2 → bootstrap-iconswoff2
+    $dot: string.index($file, '.');
+    $slug: $file;
+    @if $dot { $slug: string.slice($file, 1, $dot - 1) + string.slice($file, $dot + 1); }
+    @return url('#{$icon-base-url}/#{$slug}');
+  }
+}
+
+@if $icon-set == 'bootstrap' {
+  @if $icon-provider != 'skip' {
+    @font-face {
+      font-display: $icon-font-display;
+      font-family: $icon-font-family;
+      src: _icon-font-url('bootstrap-icons.woff2') format('woff2'),
+           _icon-font-url('bootstrap-icons.woff') format('woff');
+    }
+  }
+
+  @include provider.init;
+}

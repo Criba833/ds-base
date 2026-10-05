@@ -1,0 +1,25 @@
+@use "../functions" as fn;
+
+.text-primary {
+  color: fn.color("text", "primary");
+}
+
+.text-secondary {
+  color: fn.color("text", "secondary");
+}
+
+.text-inverse {
+  color: fn.color("text", "inverse");
+}
+
+.bg-primary {
+  background-color: fn.color("primary");
+}
+
+.bg-success {
+  background-color: fn.color("success");
+}
+
+.bg-error {
+  background-color: fn.color("danger");
+}

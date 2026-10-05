@@ -1,0 +1,418 @@
+// ─── ds-card ─────────────────────────────────────────────────────────────
+//
+//  Bloque base para cards de articulos, eventos y contenido en general.
+//
+//  NOTA: Renombrado de `.card` → `.ds-card` (2026-07-14) para evitar
+//  colision con Bootstrap 4 CDN que sobreescribia border-radius y bordes.
+//
+//  Uso:
+//    <article class="ds-card" data-variant="vertical">...</article>
+//    <article class="ds-card" data-variant="image-left">...</article>
+//    <article class="ds-card" data-variant="horizontal">...</article>
+//
+//  Variantes disponibles:
+//    vertical      — imagen arriba, contenido abajo (default)
+//    image-left    — imagen izquierda (3/8 cols), contenido derecha. Solo aplica en lg+
+//    horizontal    — imagen flush-left con padding propio, cuerpo compacto (EventCard)
+//    image-right   — pendiente
+//    image-bottom  — pendiente
+//
+// ──────────────────────────────────────────────────────────────────────────────
+
+@use "../functions" as fn;
+@use "../mixins" as mx;
+
+// ─── Lista de cards ───────────────────────────────────────────────────────────
+//
+//  Contenedor flex para apilar multiples `.ds-card` con altura equitativa.
+//  Renombrado de `.card-group` → `.ds-card-list` (2026-07-14).
+//
+.ds-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: fn.space(4);
+  height: 100%;
+
+  > .ds-card {
+    flex: 1;
+  }
+
+  &--row {
+    flex-direction: row;
+    align-items: stretch;
+    height: auto;
+  }
+}
+
+.ds-card {
+  $self: &;
+
+  width: 100%;
+  min-height: 420px;
+
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: 1fr auto;
+
+  padding: fn.space(0);
+
+  border-radius: fn.radius("2-xl");
+
+  overflow: hidden;
+  transform: translateZ(0);
+  background: fn.color("surface", "default");
+
+  border: 2px solid fn.color("border", "subtle");
+
+  transition:
+    transform 200ms ease,
+    border-color 200ms ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: fn.color("primary");
+    position: relative;
+    z-index: 1;
+  }
+
+  &:active {
+    transform: translateY(-1px);
+    transition-duration: 80ms;
+  }
+
+  &__link {
+    width: 100%;
+    height: 100%;
+
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+
+    color: inherit;
+    text-decoration: none;
+    background-color: transparent;
+  }
+
+  &__media {
+    width: 100%;
+    height: 100%;
+    grid-column: 1 / -1;
+    grid-row: 1 / 2;
+    overflow: hidden;
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__body {
+    grid-column: 1 / -1;
+    grid-row: 2 / -1;
+
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    padding: fn.space(4);
+    gap: fn.space(2);
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: fn.space(2);
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: fn.space(1);
+    padding: fn.space(1) fn.space(2);
+    border-radius: fn.radius("full");
+    background-color: fn.color("primary");
+    color: fn.color("text", "inverse");
+    font-size: fn.font-size("caption");
+    font-weight: fn.font-weight("medium");
+    margin-left: auto;
+
+    i {
+      font-size: 0.75rem;
+      color: fn.color("text", "inverse");
+    }
+  }
+
+  &__type {
+    display: flex;
+    align-items: center;
+    gap: fn.space(2);
+    font-size: 0.65rem;
+    font-weight: fn.font-weight("semibold");
+    color: fn.color("text", "secondary");
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    order: -1;
+
+    i {
+      font-size: fn.font-size("body");
+      color: fn.color("primary");
+    }
+
+    #{$self}__badge i {
+      font-size: 0.75rem;
+      color: fn.color("text", "inverse");
+    }
+  }
+
+  &__title {
+    font-size: fn.font-size("body-lg");
+    font-weight: fn.font-weight("semibold");
+    line-height: 1.3;
+    color: fn.color("text", "primary");
+
+    &--lg {
+      font-size: fn.font-size("heading-sm");
+    }
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__summary {
+    font-size: fn.font-size("caption");
+    line-height: 1.6;
+    color: fn.color("text", "secondary");
+    text-overflow: ellipsis;
+
+    @include mx.line-clamp("featured");
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-top: fn.space(3);
+    gap: fn.space(3);
+  }
+
+  &__author {
+    display: flex;
+    align-items: center;
+    gap: fn.space(3);
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__avatar {
+    width: 40px;
+    aspect-ratio: 1;
+    border-radius: 16%;
+    object-fit: cover;
+
+    &--initials {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: fn.radius("full");
+      background-color: fn.color("primary");
+      color: fn.color("text", "inverse");
+      font-size: fn.font-size("caption");
+      font-weight: fn.font-weight("semibold");
+      flex-shrink: 0;
+    }
+  }
+
+  &__author-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__label {
+    font-size: fn.font-size("caption");
+    color: fn.color("text", "secondary");
+  }
+
+  &__name {
+    font-size: fn.font-size("caption");
+    font-weight: fn.font-weight("medium");
+    color: fn.color("text", "primary");
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // ─── responsive default ──────────────────────────────────────────────
+
+  @include mx.mq("lg") {
+    &__footer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  // ─── Card variants ────────────────────────────────────────────────────
+  //
+  //  Las variantes se aplican via atributo data-variant en el elemento article.
+  //  image-left solo activa su layout en breakpoint lg+ (1024px).
+  //  horizontal es responsive desde mobile — usado por EventCard.
+
+  @include mx.mq("lg") {
+    &[data-variant="image-left"] {
+      height: 260px;
+      min-height: unset;
+      grid-template-rows: 1fr;
+      gap: fn.space(4);
+
+      #{$self}__media {
+        grid-column: 1 / 4;
+        grid-row: 1;
+        aspect-ratio: auto;
+        align-self: stretch;
+        background-color: fn.color("surface", "page");
+      }
+
+      #{$self}__image {
+        object-fit: cover;
+        object-position: center;
+      }
+
+      #{$self}__body {
+        grid-column: 4 / -1;
+        grid-row: 1;
+        justify-content: space-between;
+        padding: fn.space(3);
+        gap: fn.space(1);
+      }
+
+      #{$self}__summary {
+        line-height: 1.4;
+        @include mx.line-clamp("compact");
+      }
+
+      #{$self}__footer {
+        flex-direction: row;
+        justify-content: flex-end;
+        padding-top: fn.space(2);
+      }
+    }
+  }
+
+  // ─── Variante horizontal ─────────────────────────────────────────────
+  //
+  //  Usada por EventCard. Imagen flush-left con padding propio (8px) y
+  //  border-radius independiente. Cuerpo compacto: fecha + titulo sin gap,
+  //  meta y footer separados con margin-top.
+  //
+  //  Grid: imagen ocupa cols 1-4 / cuerpo ocupa cols 4-8 (de 8 totales).
+  //  Titulo truncado a 2 lineas. Icono de accion a 1.25rem.
+  //
+  &[data-variant="horizontal"] {
+    width: 100%;
+    height: 150px;
+    min-height: unset;
+    grid-template-rows: 1fr;
+    align-self: start;
+    gap: fn.space(6);
+    padding: 8px;
+
+    #{$self}__media {
+      grid-column: 1 / 4;
+      grid-row: 1;
+      align-self: stretch;
+      border-radius: fn.radius("lg");
+      margin: 0; // Reset Bootstrap figure margin
+      overflow: hidden;
+    }
+
+    #{$self}__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    #{$self}__body {
+      grid-column: 4 / -1;
+      grid-row: 1 / -1;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 0;
+      gap: 0;
+    }
+
+    #{$self}__date {
+      font-size: fn.font-size("body");
+      font-weight: fn.font-weight("semibold");
+      color: fn.color("text", "accent");
+      line-height: 1;
+    }
+
+    #{$self}__meta {
+      margin-top: fn.space(2);
+    }
+
+    #{$self}__footer {
+      margin-top: fn.space(2);
+    }
+
+    #{$self}__title {
+      font-size: fn.font-size("caption");
+      font-weight: fn.font-weight("regular");
+      line-height: 1.2;
+      color: fn.color("text", "primary");
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    #{$self}__meta {
+      display: flex;
+      align-items: center;
+      gap: fn.space(2);
+      font-size: fn.font-size("caption");
+      color: fn.color("text", "secondary");
+    }
+
+    #{$self}__footer {
+      padding: 0;
+    }
+
+    #{$self}__actions {
+      display: flex;
+      align-items: center;
+      gap: fn.space(2);
+    }
+
+    #{$self}__action-link {
+      font-size: 1.25rem;
+      text-decoration: none;
+      line-height: 1;
+      display: flex;
+
+      &--teams {
+        color: fn.color("secondary");
+      }
+
+      &--schedule {
+        color: fn.color("text", "secondary");
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  &[data-variant="image-right"] {
+  }
+
+  &[data-variant="image-bottom"] {
+  }
+}

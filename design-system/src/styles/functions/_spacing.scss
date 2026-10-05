@@ -1,0 +1,27 @@
+@use "sass:map";
+@use "sass:meta";
+
+@use "../tokens" as tokens;
+
+@function space($key) {
+  $negative: false;
+
+  @if meta.type-of($key) == "number" and $key < 0 {
+    $negative: true;
+    $key: "#{$key * -1}";
+  } @else if meta.type-of($key) == "number" {
+    $key: "#{$key}";
+  }
+
+  $value: map.get(tokens.$spacing, $key);
+
+  @if $value == null {
+    @error "Spacing token '#{$key}' not found.";
+  }
+
+  @if $negative {
+    @return $value * -1;
+  }
+
+  @return $value;
+}

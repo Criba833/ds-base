@@ -1,0 +1,32 @@
+@use "sass:map";
+@use "sass:meta";
+
+@use "../functions" as fn;
+@use "../tokens" as tokens;
+
+@mixin text-style($size, $weight: null) {
+  font-size: fn.font-size($size);
+
+  @if $weight != null {
+    font-weight: fn.font-weight($weight);
+  }
+}
+
+@mixin line-clamp($lines) {
+  $resolved: $lines;
+
+  @if meta.type-of($lines) == "string" {
+    $resolved: map.get(tokens.$line-clamp-tokens, $lines);
+
+    @if $resolved == null {
+      $available: map.keys(tokens.$line-clamp-tokens);
+      @error 'Unknown content density token "#{$lines}". Available tokens: #{$available}.';
+    }
+  }
+
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $resolved;
+  line-clamp: $resolved;
+}

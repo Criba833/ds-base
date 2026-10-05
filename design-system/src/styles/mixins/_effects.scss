@@ -1,0 +1,72 @@
+// =============================================================================
+// Interaction Effects — Mixins
+// =============================================================================
+//
+// Reusable motion/shadow effects for interactive components.
+//
+// Designed to work with clip-path elements (uses filter: drop-shadow,
+// NOT box-shadow, because clip-path clips box-shadow).
+//
+// Usage in components:
+//
+//   @use "../mixins" as mx;
+//
+//   .my-card {
+//     @include mx.hover-lift;
+//   }
+//
+// =============================================================================
+
+// Lift with filter: drop-shadow — for elements using clip-path
+@mixin hover-lift(
+  $shadow: 0 8px 24px rgba(0, 0, 0, 0.14),
+  $translate: -3px,
+  $duration: 200ms
+) {
+  transition: transform #{$duration} ease, filter #{$duration} ease;
+
+  &:hover {
+    transform: translateY(#{$translate});
+    filter: drop-shadow(#{$shadow});
+  }
+
+  &:active {
+    transform: translateY(-1px);
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.10));
+    transition-duration: 80ms;
+  }
+}
+
+// Lift with box-shadow — for elements using overflow: hidden (no clip-path)
+@mixin hover-lift-shadow(
+  $shadow-base: 0 4px 6px rgba(0, 0, 0, 0.10),
+  $shadow-hover: 0 10px 28px rgba(0, 0, 0, 0.16),
+  $translate: -3px,
+  $duration: 200ms
+) {
+  box-shadow: #{$shadow-base};
+  transition: transform #{$duration} ease, box-shadow #{$duration} ease;
+
+  &:hover {
+    transform: translateY(#{$translate});
+    box-shadow: #{$shadow-hover};
+  }
+
+  &:active {
+    transform: translateY(-1px);
+    box-shadow: #{$shadow-base};
+    transition-duration: 80ms;
+  }
+}
+
+// Subtle scale — for smaller interactive elements (chips, tags, buttons)
+@mixin hover-scale($scale: 1.02, $duration: 180ms) {
+  transition: transform #{$duration} ease;
+
+  &:hover { transform: scale(#{$scale}); }
+
+  &:active {
+    transform: scale(0.98);
+    transition-duration: 80ms;
+  }
+}

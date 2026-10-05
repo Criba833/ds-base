@@ -1,0 +1,7 @@
+@use "../tokens" as tokens;
+
+@each $key, $value in tokens.$radius {
+  .radius-#{$key} {
+    border-radius: $value;
+  }
+}

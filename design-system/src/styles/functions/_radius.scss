@@ -1,0 +1,13 @@
+@use "sass:map";
+
+@use "../tokens" as tokens;
+
+@function radius($key) {
+  $value: map.get(tokens.$radius, $key);
+
+  @if $value == null {
+    @error "Radius token '#{$key}' not found.";
+  }
+
+  @return $value;
+}

@@ -1,0 +1,275 @@
+@use "sass:map";
+
+@function ds($token) {
+  @return var(--#{$token});
+}
+
+// ── Variantes ─────────────────────────────────────────────────────────────────
+//
+//  Cada entrada define los valores CSS que se generan con @each.
+//  hover-opacity: se usa opacity en hover (ej. primary).
+//  hover-bg / hover-color: se intercambian colores en hover (ej. outline).
+
+$_variants: (
+  "primary": (
+    "bg": ds(color-primary),
+    "color": ds(color-text-inverse),
+    "border-color": ds(color-primary),
+    "border-width": 2px,
+    // hover: relleno desaparece — queda solo el borde (fill → outline)
+    "hover-bg": transparent,
+    "hover-color": ds(color-primary),
+  ),
+  "outline": (
+    "bg": transparent,
+    "color": ds(color-text-secondary),
+    "border-color": ds(color-border-default),
+    "border-width": 1px,
+    "hover-bg": ds(color-border-default),
+    "hover-color": ds(color-text-primary),
+  ),
+  "soft": (
+    "bg": color-mix(in srgb, var(--color-primary) 12%, transparent),
+    "color": ds(color-primary),
+    "border-color": transparent,
+    "border-width": 1px,
+    "hover-bg": color-mix(in srgb, var(--color-primary) 22%, transparent),
+    "hover-color": ds(color-primary),
+  ),
+
+  "white": (
+    "bg": ds(color-surface-default),
+    "color": ds(color-text-primary),
+    "border-color": transparent,
+    "border-width": 1px,
+
+    //? spike-pendiente: aquí debe quedar el control del icono
+    // "icon-bg": ds(color-primary),
+    // "icon-color": ds(color-text-inverse),
+    "hover-bg": ds(color-surface-default),
+    "hover-color": ds(color-danger),
+  ),
+);
+
+// ── Tamaños ───────────────────────────────────────────────────────────────────
+//
+//  El tamaño base (md) está definido en el bloque .ds-btn.
+//  sm y lg se generan automáticamente con @each.
+
+$_sizes: (
+  "sm": (
+    "padding-y": ds(spacing-1),
+    "padding-x": ds(spacing-3),
+    "font-size": ds(font-size-caption),
+  ),
+  "lg": (
+    "padding-y": ds(spacing-3),
+    "padding-x": ds(spacing-8),
+    "font-size": ds(font-size-body-lg),
+  ),
+);
+
+// ── Bloque base ───────────────────────────────────────────────────────────────
+//
+//  Prefijo ds- obligatorio (docs/plan.md "Nomenclatura CSS — Regla Obligatoria"):
+//  Liferay/Clay define su propia clase .btn nativa (Bootstrap). Sin el
+//  namespace, la cascada de Liferay pisa estos estilos en produccion.
+
+.ds-btn {
+  width: fit-content;
+  display: inline-flex;
+
+  align-items: center;
+  gap: ds(spacing-2);
+  padding: ds(spacing-2) ds(spacing-4);
+
+  border-style: solid;
+  border-radius: ds(radius-md);
+
+  font-family: ds(font-family-base);
+  font-size: ds(font-size-caption);
+  font-weight: ds(font-weight-medium);
+
+  line-height: 1;
+
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color ds(motion-duration-fast) ds(motion-easing-standard),
+    color ds(motion-duration-fast) ds(motion-easing-standard),
+    opacity ds(motion-duration-fast) ds(motion-easing-standard);
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  // ── Variantes generadas ─────────────────────────────────────────────────────
+  @each $name, $config in $_variants {
+    &--#{$name} {
+      background: map.get($config, "bg");
+      color: map.get($config, "color");
+      border-color: map.get($config, "border-color");
+      border-width: map.get($config, "border-width");
+
+      &:hover {
+        @if map.has-key($config, "hover-opacity") {
+          opacity: map.get($config, "hover-opacity");
+        } @else {
+          background: map.get($config, "hover-bg");
+        }
+        @if map.has-key($config, "hover-color") {
+          color: map.get($config, "hover-color");
+        }
+      }
+    }
+  }
+
+  // ── Tamaños generados ───────────────────────────────────────────────────────
+  @each $size, $config in $_sizes {
+    &--#{$size} {
+      padding: map.get($config, "padding-y") map.get($config, "padding-x");
+      font-size: map.get($config, "font-size");
+    }
+  }
+
+  // ── Forma ───────────────────────────────────────────────────────────────────
+  &--pill {
+    border-radius: ds(radius-full);
+  }
+
+  // ── Iconos Bootstrap Icons ──────────────────────────────────────────────────
+  //
+  //  Uso:  <button class="ds-btn ds-btn--primary">
+  //          <i class="bi bi-thumbs-up"></i> Reconocer        ← icono izquierda
+  //        </button>
+  //        <button class="ds-btn ds-btn--outline ds-btn--icon-right">
+  //          32 reconocimientos <i class="bi bi-emoji-heart-eyes"></i>
+  //        </button>
+  //
+  //  .ds-btn--icon-right empuja el icono al final usando order.
+
+  i[class*="bi"] {
+    font-size: 1em;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  &--icon-right i[class*="bi"] {
+    order: 1;
+  }
+
+  // ── Ícono circular (badge) ──────────────────────────────────────────────────
+  //
+  //  Uso: <button class="ds-btn ds-btn--primary ds-btn--pill">
+  //         Ver video
+  //         <span class="ds-btn__icon"><i class="bi bi-arrow-up-right"></i></span>
+  //       </button>
+  //
+  //  El botón debe llevar padding asimétrico cuando use ds-btn__icon flush al borde:
+  //  padding: spacing-1 spacing-1 spacing-1 spacing-6
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: ds(color-text-inverse);
+    color: ds(color-primary);
+    font-size: ds(font-size-body);
+    flex-shrink: 0;
+  }
+
+  // ── Esto debe quedar dentro del mapa y el @each al igual que &__icon ────────────────────────────────────────────────────
+
+  &--white {
+    .ds-btn__icon {
+      background: ds(color-primary);
+      color: ds(color-text-inverse);
+    }
+  }
+
+  // ── Efecto expand: el ícono badge se expande para llenar el botón ──────────
+  //
+  //  Aplica a cualquier variante que use ds-btn__icon.
+  //  Un ::before con clip-path arranca como círculo (igual al badge) anclado
+  //  a la derecha, y se expande hasta cubrir el botón completo en hover.
+  //  Su color se define por variante en los bloques siguientes.
+  //
+  //  transform: translateZ(0) crea un stacking context que confina z-index: -1.
+
+  &:has(.ds-btn__icon) {
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0);
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      right: 4px; // spacing-1 — alineado con el badge
+      top: 50%;
+      translate: 0 -50%;
+      border-radius: 50%;
+      scale: 1;
+      transition: scale 550ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .ds-btn__icon {
+      position: relative;
+      z-index: 1;
+      transition:
+        background ds(motion-duration-fast) ds(motion-easing-standard),
+        color ds(motion-duration-fast) ds(motion-easing-standard);
+    }
+
+    &:hover::before {
+      scale: 20;
+    }
+  }
+
+  // primary + icon: el blanco (bg del badge) se expande
+  &--primary:has(.ds-btn__icon) {
+    &::before { background: ds(color-text-inverse); }
+
+    &:hover {
+      background: ds(color-primary); // cancela el hover-bg: transparent del @each
+      color: ds(color-primary);
+
+      .ds-btn__icon {
+        background: ds(color-primary);
+        color: ds(color-text-inverse);
+      }
+    }
+  }
+
+  // white + icon: el color primario (bg del badge) se expande
+  &--white:has(.ds-btn__icon) {
+    &::before { background: ds(color-primary); } // el rojo/primary crece desde el badge
+
+    &:hover {
+      background: ds(color-surface-default);
+      color: ds(color-text-inverse);
+
+      .ds-btn__icon {
+        background: ds(color-text-inverse);
+        color: ds(color-primary);
+      }
+    }
+  }
+
+  // ── Estado deshabilitado ────────────────────────────────────────────────────
+  &:disabled,
+  &[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}

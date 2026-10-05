@@ -1,0 +1,39 @@
+@use "../functions" as fn;
+
+@mixin p($key) {
+  padding: fn.space($key);
+}
+
+@mixin pt($key) {
+  padding-top: fn.space($key);
+}
+
+@mixin pb($key) {
+  padding-bottom: fn.space($key);
+}
+@mixin p-block($key) {
+  padding-block: fn.space($key);
+}
+
+@mixin p-block-end($key) {
+  padding-block-end: fn.space($key);
+}
+@mixin p-inline($key) {
+  padding-inline: fn.space($key);
+}
+
+@mixin m($key) {
+  margin: fn.space($key);
+}
+
+@mixin mt($key) {
+  margin-top: fn.space($key);
+}
+
+@mixin mb($key) {
+  margin-bottom: fn.space($key);
+}
+
+@mixin gap($key) {
+  gap: fn.space($key);
+}

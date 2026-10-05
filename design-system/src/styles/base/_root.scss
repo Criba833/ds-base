@@ -1,0 +1,54 @@
+@use "sass:map";
+@use "sass:meta";
+
+@use "../functions" as fn;
+@use "../tokens" as tokens;
+
+:root {
+  @each $key, $value in tokens.$semantic-colors {
+    @if meta.type-of($value) == "map" {
+      @each $token, $pair in $value {
+        --color-#{$key}-#{$token}: #{fn.color($key, $token)};
+      }
+    } @else {
+      --color-#{$key}: #{fn.color($key)};
+    }
+  }
+
+  @each $key, $value in tokens.$spacing {
+    --spacing-#{$key}: #{$value};
+  }
+
+  @each $key, $value in tokens.$type-scale {
+    --font-size-#{$key}: #{$value};
+  }
+
+  @each $key, $value in tokens.$font-weights {
+    --font-weight-#{$key}: #{$value};
+  }
+
+  @each $key, $value in tokens.$font-families {
+    --font-family-#{$key}: #{meta.inspect($value)};
+  }
+
+  @each $key, $value in tokens.$radius {
+    --radius-#{$key}: #{$value};
+  }
+
+  @each $key, $value in tokens.$shadows {
+    --shadow-#{$key}: #{$value};
+  }
+
+  @each $key, $value in tokens.$motion-duration {
+    --motion-duration-#{$key}: #{$value};
+  }
+
+  @each $key, $value in tokens.$motion-easing {
+    --motion-easing-#{$key}: #{$value};
+  }
+}
+
+body {
+  font-family: var(--font-family-base);
+  color: var(--color-text-primary);
+}

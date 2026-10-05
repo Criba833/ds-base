@@ -1,0 +1,23 @@
+@use "sass:map";
+
+@use "../tokens" as tokens;
+
+@function font-size($key) {
+  $value: map.get(tokens.$type-scale, $key);
+
+  @if $value == null {
+    @error "Typography size token '#{$key}' not found.";
+  }
+
+  @return $value;
+}
+
+@function font-weight($key) {
+  $value: map.get(tokens.$font-weights, $key);
+
+  @if $value == null {
+    @error "Typography weight token '#{$key}' not found.";
+  }
+
+  @return $value;
+}

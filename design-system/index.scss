@@ -1,0 +1,19 @@
+// Design System — Public API
+//
+// This file is the ONLY entry point for consumers.
+// It MUST contain only @forward statements — no variables, no configuration.
+//
+// Configuration is passed via @use ... with (...) from the host bridge
+// (apps/workspace/src/styles/design-system.scss). Internal configuration
+// variables ($font-provider, $icon-provider, etc.) are accessible from
+// the public API but consumers should use CSS custom properties
+// (var(--spacing-*), var(--color-*), var(--font-family-base)) instead.
+
+@forward "src/styles/tokens";
+@forward "src/styles/functions";
+@forward "src/styles/mixins";
+@forward "src/styles/fonts";
+@forward "src/styles/icons";
+@forward "src/styles/base";
+@forward "src/styles/helpers";
+@forward "src/styles/components";

@@ -1,0 +1,15 @@
+// Design System — API only
+//
+// Entry point for Fragments and any consumer that needs Sass functions,
+// mixins, and tokens WITHOUT generating any CSS output.
+//
+// Use this instead of @use "design-system" when the full Design System CSS
+// is already loaded globally (e.g. portal-design-system.css in Liferay).
+//
+// Usage in fragments:
+//   @use "design-system/api" as ds;
+//   .my-class { padding: ds.space(4); color: ds.color("text", "default"); }
+
+@forward "src/styles/tokens";
+@forward "src/styles/functions";
+@forward "src/styles/mixins";

@@ -1,0 +1,13 @@
+{
+  "name": "@liferay-portal-core/design-system",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.scss",
+    "./api": "./api.scss"
+  },
+  "peerDependencies": {
+    "sass": "^1.70.0"
+  }
+}

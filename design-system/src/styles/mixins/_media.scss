@@ -1,0 +1,19 @@
+@use "sass:map";
+
+@use "../tokens" as tokens;
+
+@function breakpoint($key) {
+  $value: map.get(tokens.$breakpoints, $key);
+
+  @if $value == null {
+    @error "Breakpoint '#{$key}' not found.";
+  }
+
+  @return $value;
+}
+
+@mixin mq($key) {
+  @media (min-width: breakpoint($key)) {
+    @content;
+  }
+}

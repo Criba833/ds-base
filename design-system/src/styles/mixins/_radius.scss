@@ -1,0 +1,13 @@
+@use "sass:map";
+
+@use "../tokens" as tokens;
+
+@mixin rounded($key) {
+  $value: map.get(tokens.$radius, $key);
+
+  @if $value == null {
+    @error "Radius token '#{$key}' not found.";
+  }
+
+  border-radius: $value;
+}

@@ -1,0 +1,42 @@
+@use "sass:meta";
+@use "../functions" as fn;
+
+@mixin text-color($group, $token: null) {
+  @if $token == null {
+    color: fn.color($group);
+  } @else {
+    color: fn.color($group, $token);
+  }
+}
+
+@mixin background-color($group, $token: null) {
+  @if $token == null {
+    background-color: fn.color($group);
+  } @else {
+    background-color: fn.color($group, $token);
+  }
+}
+
+@mixin border-color($group, $token: null) {
+  @if $token == null {
+    border-color: fn.color($group);
+  } @else {
+    border-color: fn.color($group, $token);
+  }
+}
+
+@mixin fill-color($group, $token: null) {
+  @if $token == null {
+    fill: fn.color($group);
+  } @else {
+    fill: fn.color($group, $token);
+  }
+}
+
+@mixin stroke-color($group, $token: null) {
+  @if $token == null {
+    stroke: fn.color($group);
+  } @else {
+    stroke: fn.color($group, $token);
+  }
+}

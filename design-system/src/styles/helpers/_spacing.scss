@@ -1,0 +1,42 @@
+@use "../tokens" as tokens;
+
+@each $key, $value in tokens.$spacing {
+  // Padding
+  .p-#{$key} {
+    padding: $value;
+  }
+
+  .px-#{$key} {
+    padding-inline: $value;
+  }
+
+  .py-#{$key} {
+    padding-block: $value;
+  }
+
+  // Margin
+  .m-#{$key} {
+    margin: $value;
+  }
+
+  .mx-#{$key} {
+    margin-inline: $value;
+  }
+
+  .my-#{$key} {
+    margin-block: $value;
+  }
+
+  // Gap
+  .gap-#{$key} {
+    gap: $value;
+  }
+
+  .gap-x-#{$key} {
+    column-gap: $value;
+  }
+
+  .gap-y-#{$key} {
+    row-gap: $value;
+  }
+}

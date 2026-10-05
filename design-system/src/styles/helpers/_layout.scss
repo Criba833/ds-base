@@ -1,0 +1,276 @@
+@use "../tokens" as tokens;
+@use "../functions" as fn;
+@use "../mixins" as *;
+
+// -----------------------------------------------------------------------------
+// Technical layout helpers
+// -----------------------------------------------------------------------------
+//
+// These selectors normalize runtime and preview wrappers so they do not
+// interfere with Design System layout primitives.
+//
+// They are NOT visual utilities.
+// They only ensure that technical DOM nodes remain layout-transparent.
+//
+// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// Preview / Runtime wrappers
+// -----------------------------------------------------------------------------
+//
+// The fragment preview injects a technical wrapper:
+//
+// <section fragment="hero-banner">
+//   <section class="hero-banner">...</section>
+// </section>
+//
+// CSS Grid and Flex only lay out direct children. The wrapper would become
+// the grid item instead of the fragment itself, preventing components from
+// participating correctly in parent layouts.
+//
+// display: contents removes the wrapper from the layout tree while preserving
+// it in the DOM, allowing:
+//
+// - Fragment identification
+// - Runtime hooks
+// - Script execution
+// - DevTools inspection
+//
+// The children become the effective grid/flex items.
+//
+// NOTE:
+// The wrapper remains in the DOM but no longer generates a box.
+//
+
+// Layout primitives (.ds-grid, .ds-stack, .ds-sidebar, etc.)
+// should always operate on the actual fragment component,
+// never on runtime or preview wrappers.
+// -----------------------------------------------------------------------------
+
+section[fragment] {
+  display: contents;
+}
+// =============================================================================
+// Layout Helpers
+// =============================================================================
+//
+// Global layout primitives used across:
+//
+// - React Components
+// - Liferay Client Extensions
+// - Liferay Fragments
+// - Static HTML
+//
+// Naming convention:
+//
+// Primitive layouts
+// -----------------
+// Organize space only.
+//
+// .ds-section
+// .ds-container
+// .ds-grid
+// .ds-stack
+// .ds-cluster
+// .ds-flow
+// .ds-sidebar
+// .ds-switcher
+// .ds-center
+//
+// Composite layouts
+// -----------------
+// Reusable layout compositions.
+// They DO NOT represent business components.
+//
+// .ds-split-overlap
+// .ds-media-npm run dev (future)
+//
+// =============================================================================
+
+// =============================================================================
+// Primitive Layouts
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Section
+//
+// Generic responsive section wrapper.
+//
+// Usage:
+//
+// <section class="ds-section">
+//   <div class="ds-section__content">
+//     ...
+//   </div>
+// </section>
+// -----------------------------------------------------------------------------
+
+.ds-grid {
+  width: 100%;
+  height: 100dvh;
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 0.2fr repeat(4, minmax(min-content, 1fr)) 0.2fr;
+  grid-template-rows: auto;
+
+  @include mq("sm") {
+    grid-template-columns: 0.5fr repeat(8, minmax(min-content, 1fr)) 0.5fr;
+  }
+
+  @include mq("lg") {
+    grid-template-columns: 1fr repeat(12, minmax(min-content, 1fr)) 1fr;
+  }
+
+  @include mq("xl") {
+    grid-template-columns: 0.5fr repeat(12, minmax(min-content, 1fr)) 0.5fr;
+  }
+
+  @include mq("xxl") {
+    grid-template-columns: 0.6fr repeat(12, minmax(min-content, 1fr)) 0.6fr;
+  }
+
+  // background-color: dodgerblue;
+}
+
+.ds-section {
+  width: 100%;
+
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: 1fr;
+
+  @include background-color("surface", "default");
+
+  &__content {
+    display: grid;
+    grid-auto-flow: row;
+    align-items: stretch;
+
+    @include gap(8);
+  }
+
+  @include mq("lg") {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    align-items: stretch;
+
+    &__content {
+      @include gap(4);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Even Columns
+//
+// Creates equal-width responsive columns.
+//
+// Usage:
+//
+// <div class="even-columns">
+//   ...
+// </div>
+// -----------------------------------------------------------------------------
+
+.even-columns {
+  width: 100%;
+
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-columns: 1fr;
+
+  @include mq("lg") {
+    grid-auto-flow: column;
+  }
+}
+
+// =============================================================================
+// Composite Layouts
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Split Overlap
+//
+// Two-column responsive composition.
+//
+// Designed for layouts where:
+//
+// - Content overlaps media.
+// - Content remains above media using z-index.
+// - Media occupies the right side on desktop.
+// - Stacks vertically on mobile.
+//
+// This is a layout helper.
+//
+// It MUST NOT contain business-specific styles.
+//
+// Current consumer:
+//
+// - Radar Events section.
+//
+// Future consumers:
+//
+// - Landing pages
+// - Marketing blocks
+// - Promotional sections
+// -----------------------------------------------------------------------------
+
+// .ds-split-overlap {
+//   width: 100%;
+//   position: relative;
+
+//   display: grid;
+//   grid-auto-flow: row;
+//   grid-auto-rows: 1fr;
+
+//   @include p-inline(8);
+//   @include background-color("surface", "default");
+
+//   &__content {
+//     width: 100%;
+//     grid-row: auto;
+//   }
+
+//   &__media {
+//     width: 100%;
+//     display: none;
+
+//     img {
+//       width: 100%;
+//       height: auto;
+//       object-fit: cover;
+//     }
+//   }
+
+//   @include mq("lg") {
+//     grid-template-columns: repeat(12, 1fr);
+
+//     @include p-block(16);
+//     @include p-inline(24);
+
+//     &__content {
+//       width: 100%;
+//       z-index: 1;
+
+//       grid-column: 1 / 9;
+//       grid-row: 1 / -1;
+
+//       display: flex;
+//       flex-direction: column;
+//       justify-content: center;
+//       align-items: center;
+
+//       > * {
+//         @include p-block-end(4);
+//       }
+//     }
+
+//     &__media {
+//       display: flex;
+//       z-index: 0;
+
+//       grid-column: 8 / -1;
+//       grid-row: 1 / -1;
+//     }
+//   }
+// }

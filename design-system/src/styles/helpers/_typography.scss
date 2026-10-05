@@ -1,0 +1,13 @@
+@use "../tokens" as tokens;
+
+@each $key, $value in tokens.$type-scale {
+  .text-#{$key} {
+    font-size: $value;
+  }
+}
+
+@each $key, $value in tokens.$font-weights {
+  .font-#{$key} {
+    font-weight: $value;
+  }
+}

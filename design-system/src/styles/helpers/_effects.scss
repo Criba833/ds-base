@@ -1,0 +1,20 @@
+// =============================================================================
+// Interaction Effects — Utility Classes
+// =============================================================================
+//
+// Apply directly in HTML or fragments for zero-config interactivity.
+//
+// Usage:
+//   <article class="card ds-effect-lift"> ... </article>
+//
+// =============================================================================
+
+@use "../mixins" as mx;
+
+.ds-effect-lift {
+  @include mx.hover-lift;
+}
+
+.ds-effect-scale {
+  @include mx.hover-scale;
+}
